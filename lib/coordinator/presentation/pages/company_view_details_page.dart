@@ -12,7 +12,6 @@ class CompanyViewDetailsPage extends StatefulWidget {
 class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
     with SingleTickerProviderStateMixin {
 
-  // ── Palette (same as all other pages) ─────────────────────────────────────
   static const Color bgColor   = Color(0xFFF1F5F9);
   static const Color navy      = Color(0xFF1E3A8A);
   static const Color blue      = Color(0xFF2563EB);
@@ -31,10 +30,8 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
 
-  // ── Selected tab for work locations ───────────────────────────────────────
   int _selectedLocationIndex = 0;
 
-  // ── Mock work locations (from RegisterCompanyPage fields) ──────────────────
   final List<Map<String, String>> _workLocations = [
     {
       'city': 'Pune, Maharashtra',
@@ -91,7 +88,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  // ── GRADIENT HEADER ────────────────────────────────────────
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -104,7 +100,7 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
                     ),
                     child: Column(
                       children: [
-                        // Back button row
+
                         Row(
                           children: [
                             GestureDetector(
@@ -126,7 +122,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
 
                         const SizedBox(height: 20),
 
-                        // Company avatar + name
                         Row(
                           children: [
                             Container(
@@ -176,7 +171,7 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  // Status badge
+
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 5),
@@ -209,7 +204,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
 
                         const SizedBox(height: 20),
 
-                        // ── 3 stat pills ─────────────────────────────────────
                         Row(
                           children: [
                             _headerStat(
@@ -234,7 +228,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
 
                   const SizedBox(height: 20),
 
-                  // ── BASIC INFORMATION ──────────────────────────────────────
                   _sectionTitle("BASIC INFORMATION"),
                   _sectionCard(children: [
                     _infoRow(Icons.business_rounded, 'Company Name',
@@ -252,7 +245,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
 
                   const SizedBox(height: 16),
 
-                  // ── WORK LOCATIONS ─────────────────────────────────────────
                   _sectionTitle("WORK LOCATIONS"),
 
                   // Location tab selector
@@ -320,7 +312,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
 
                   const SizedBox(height: 16),
 
-                  // ── ACTIVE OPENINGS ────────────────────────────────────────
                   _sectionTitle("ACTIVE OPENINGS"),
                   _openingsCard(cardColor, cardBg),
 
@@ -334,7 +325,6 @@ class _CompanyViewDetailsPageState extends State<CompanyViewDetailsPage>
     );
   }
 
-  // ── Header stat pill ───────────────────────────────────────────────────────
   Widget _headerStat(IconData icon, String value, String label) {
     return Expanded(
       child: Container(

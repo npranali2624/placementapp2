@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../login/presentation/pages/login_page.dart';
 import '../../../coordinator/presentation/pages/register_company_page.dart';
-import '../../../coordinator/presentation/pages/add_edit_opening.dart';
+import '../../../coordinator/presentation/pages/add_opening.dart';
 import '../../../coordinator/presentation/pages/update_opening_page.dart';
 import '../../../coordinator/presentation/pages/add_work_location_page.dart';
 import '../../../coordinator/presentation/pages/company_details_page.dart';
 import '../../../coordinator/presentation/pages/coordinator_profile_page.dart';
 import '../../../coordinator/presentation/pages/read_opening_page.dart';
+import '../../../coordinator/presentation/pages/applicants_page.dart';   // ← NEW
 import '../../presentation/widgets/info_tile.dart';
 
 class CoordinatorDashboardPage extends StatefulWidget {
@@ -42,7 +43,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
     );
   }
 
-  // ── NEW: navigate to Read Openings ─────────────────────────────────────────
   void _openReadOpening() {
     Navigator.push(
       context,
@@ -55,8 +55,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
       context,
       MaterialPageRoute(
         builder: (context) => const UpdateOpeningScreen(),
-        // Pass a real opening object when you have one:
-        // builder: (context) => UpdateOpeningScreen(opening: myOpening),
       ),
     );
   }
@@ -97,8 +95,7 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
                   CircleAvatar(
                     radius: 24,
                     backgroundColor: Colors.white,
-                    child:
-                    Icon(Icons.person, size: 26, color: Color(0xFF2563EB)),
+                    child: Icon(Icons.person, size: 26, color: Color(0xFF2563EB)),
                   ),
                   SizedBox(width: 12),
                   Column(
@@ -132,7 +129,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
         ),
       ),
 
-      // ── Show AppBar only on Home tab ────────────────────────────────────────
       appBar: _currentIndex == 0
           ? AppBar(
         backgroundColor: const Color(0xFFF1F5F9),
@@ -166,7 +162,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
       )
           : null,
 
-      // ── IndexedStack keeps all pages alive ──────────────────────────────────
       body: IndexedStack(
         index: _currentIndex,
         children: [
@@ -176,13 +171,10 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
           // Index 1 — Companies
           const CompanyDetailsPage(),
 
-          // Index 2 — Jobs (placeholder)
-          const Center(child: Text("Jobs Page")),
+          // Index 2 — Applicants
+          const ApplicantsPage(),
 
-          // Index 3 — Applicants (placeholder)
-          const Center(child: Text("Applicants Page")),
-
-          // Index 4 — Profile
+          // Index 3 — Profile
           const CoordinatorProfilePage(),
         ],
       ),
@@ -199,15 +191,13 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
         items: [
           _navItem(Icons.home, "Home", 0),
           _navItem(Icons.business, "Companies", 1),
-          _navItem(Icons.work, "Jobs", 2),
-          _navItem(Icons.group, "Applicants", 3),
-          _navItem(Icons.person, "Profile", 4),
+          _navItem(Icons.group, "Applicants", 2),
+          _navItem(Icons.person, "Profile", 3),
         ],
       ),
     );
   }
 
-  // ── Home Page Content ───────────────────────────────────────────────────────
   Widget _buildHomePage() {
     return SafeArea(
       child: SingleChildScrollView(
@@ -222,11 +212,10 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
 
-            // ── BANNER ─────────────────────────────────────────────────────────
+            // ── BANNER ───────────────────────────────────────────────────────
             Container(
               width: double.infinity,
-              padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [
@@ -257,20 +246,16 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
 
             const SizedBox(height: 20),
 
-            // ── STAT CARDS ─────────────────────────────────────────────────────
             const Row(
               children: [
-                _StatCard(
-                    "28", "Companies", Icons.business, Color(0xFF2563EB)),
-                _StatCard("54", "Openings", Icons.work, Color(0xFF06B6D4)),
-                _StatCard(
-                    "196", "Applicants", Icons.people, Color(0xFF22C55E)),
+                _StatCard("28", "Companies", Icons.business, Color(0xFF2563EB)),
+                _StatCard("54", "Openings",  Icons.work,     Color(0xFF06B6D4)),
+                _StatCard("196", "Applicants", Icons.people, Color(0xFF22C55E)),
               ],
             ),
 
             const SizedBox(height: 25),
 
-            // ── TILES ──────────────────────────────────────────────────────────
             InkWell(
               onTap: _openAddWorkLocation,
               child: const InfoTile(
@@ -281,7 +266,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
               ),
             ),
 
-            // ── UPDATED: "Read Opening" tile now navigates ─────────────────────
             InkWell(
               onTap: _openReadOpening,
               child: const InfoTile(
@@ -292,7 +276,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
               ),
             ),
 
-            // ── UPDATED: "Update Opening" tile now navigates ───────────────────
             InkWell(
               onTap: _openUpdateOpening,
               child: const InfoTile(
@@ -305,7 +288,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
 
             const SizedBox(height: 20),
 
-            // ── ACTION BUTTONS ─────────────────────────────────────────────────
             Row(
               children: [
                 Expanded(
@@ -392,7 +374,6 @@ class _CoordinatorDashboardPageState extends State<CoordinatorDashboardPage> {
   }
 }
 
-// ── Stat Card ───────────────────────────────────────────────────────────────────
 class _StatCard extends StatelessWidget {
   final String number;
   final String label;

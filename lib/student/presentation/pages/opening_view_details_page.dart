@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import '../pages/student_job_apply_page.dart';
 
 class OpeningViewDetailsPage extends StatelessWidget {
   final Map<String, dynamic> opening;
+
+  // ── Simulated logged-in student profile ───────────────────────────────────
+  // Replace this with your actual profile provider / auth state
+  static const Map<String, String> _studentProfile = {
+    'name':           'Rahul Sharma',
+    'email':          'rahul.sharma@email.com',
+    'phone':          '+91 98765 43210',
+    'course':         'B.E. Computer Engineering',
+    'cgpa':           '8.5 / 10',
+    'specialization': 'Computer Engineering',
+  };
 
   const OpeningViewDetailsPage({super.key, required this.opening});
 
@@ -29,7 +41,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
     end: Alignment.bottomRight,
   );
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // ── Data helpers ───────────────────────────────────────────────────────────
 
   String _str(String key, [String fallback = '—']) {
     final v = opening[key];
@@ -52,7 +64,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
     return {};
   }
 
-  // ── Widgets ────────────────────────────────────────────────────────────────
+  // ── Widget helpers ─────────────────────────────────────────────────────────
 
   Widget _sectionTitle(BuildContext context, String title) => Padding(
     padding: const EdgeInsets.only(bottom: 10),
@@ -203,7 +215,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
               : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: items.asMap().entries.map((entry) {
-              final i = entry.key;
+              final i    = entry.key;
               final text = entry.value;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -252,22 +264,81 @@ class OpeningViewDetailsPage extends StatelessWidget {
     );
   }
 
-  // ── BUILD ──────────────────────────────────────────────────────────────────
+  // ── Apply Now Button ───────────────────────────────────────────────────────
+
+  Widget _applyNowButton(BuildContext context) => GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => StudentJobApplyPage(
+            jobTitle:    _str('jobTitle'),
+            company:     _str('company'),
+            profileData: _studentProfile,
+          ),
+        ),
+      );
+    },
+    child: Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: _primaryGradient,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: blue.withValues(alpha: 0.40),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Apply Now',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.20),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.arrow_outward_rounded,
+              color: Colors.white,
+              size: 18,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  // ── Build ──────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final Color cardColor = (opening['companyColor'] as Color?) ?? blue;
 
-    final bool isSalary = opening['openingType'] != 'Internship';
+    final bool   isSalary    = opening['openingType'] != 'Internship';
     final String salaryLabel =
     isSalary ? 'Salary Range (LPA)' : 'Stipend Range (₹/month)';
 
-    final Set<String> qualifications = _set('selectedQualifications');
-    final List<String> responsibilities = _list('responsibilities');
-    final List<String> techRequirements = _list('techRequirements');
+    final Set<String>  qualifications           = _set('selectedQualifications');
+    final List<String> responsibilities         = _list('responsibilities');
+    final List<String> techRequirements         = _list('techRequirements');
     final List<String> professionalRequirements = _list('professionalRequirements');
-    final List<String> terms = _list('terms');
+    final List<String> terms                    = _list('terms');
 
-    final bool isFresher = opening['isFresher'] as bool? ?? true;
+    final bool   isFresher      = opening['isFresher'] as bool? ?? true;
     final String experienceText = isFresher
         ? 'Fresher'
         : '${_str('expValue')} ${_str('expUnit')} experience required';
@@ -281,7 +352,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // ── HEADER ──────────────────────────────────────────────────
+              // ── HEADER ────────────────────────────────────────────────────
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -292,15 +363,10 @@ class OpeningViewDetailsPage extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(Icons.arrow_back,
-                            color: Colors.white, size: 20),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 24,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -353,15 +419,14 @@ class OpeningViewDetailsPage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // ── JOB DETAILS ──────────────────────────────────────────────
+              // ── JOB DETAILS ───────────────────────────────────────────────
               _sectionTitle(context, 'JOB DETAILS'),
               _sectionCard(children: [
-                _infoRow('Company', _str('company')),
-                _infoRow('Job Title', _str('jobTitle')),
+                _infoRow('Company',          _str('company')),
+                _infoRow('Job Title',        _str('jobTitle')),
                 _infoRow('No. of Vacancies', _str('vacancies')),
-                _infoRow('Experience', experienceText),
-                _infoRow('Opening Type', _str('openingType')),
-                // Qualifications multi-select chips
+                _infoRow('Experience',       experienceText),
+                _infoRow('Opening Type',     _str('openingType')),
                 if (qualifications.isNotEmpty) ...[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -380,9 +445,8 @@ class OpeningViewDetailsPage extends StatelessWidget {
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: qualifications
-                              .map((q) => _chipBadge(q))
-                              .toList(),
+                          children:
+                          qualifications.map((q) => _chipBadge(q)).toList(),
                         ),
                       ],
                     ),
@@ -391,7 +455,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
                   _infoRow('Required Qualification', '—'),
               ]),
 
-              // ── COMPENSATION ─────────────────────────────────────────────
+              // ── COMPENSATION ──────────────────────────────────────────────
               _sectionTitle(context, 'COMPENSATION'),
               _sectionCard(children: [
                 Padding(
@@ -460,15 +524,15 @@ class OpeningViewDetailsPage extends StatelessWidget {
                 ),
               ]),
 
-              // ── LOCATION & SCOPE ─────────────────────────────────────────
+              // ── LOCATION & SCOPE ──────────────────────────────────────────
               _sectionTitle(context, 'LOCATION & SCOPE'),
               _sectionCard(children: [
-                _infoRow('Work Location', _str('location')),
-                _infoRow('Job Time', _str('jobTime')),
+                _infoRow('Work Location',   _str('location')),
+                _infoRow('Job Time',        _str('jobTime')),
                 _infoRow('Time Constraint', _str('timeConstraint')),
               ]),
 
-              // ── RESPONSIBILITIES ─────────────────────────────────────────
+              // ── RESPONSIBILITIES ──────────────────────────────────────────
               _dynamicListCard(
                 context,
                 sectionTitle: 'RESPONSIBILITIES',
@@ -477,7 +541,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
                 emptyIcon: Icons.checklist_rounded,
               ),
 
-              // ── TECHNICAL REQUIREMENTS ───────────────────────────────────
+              // ── TECHNICAL REQUIREMENTS ────────────────────────────────────
               _dynamicListCard(
                 context,
                 sectionTitle: 'TECHNICAL REQUIREMENTS',
@@ -486,7 +550,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
                 emptyIcon: Icons.code_rounded,
               ),
 
-              // ── PROFESSIONAL REQUIREMENTS ────────────────────────────────
+              // ── PROFESSIONAL REQUIREMENTS ─────────────────────────────────
               _dynamicListCard(
                 context,
                 sectionTitle: 'PROFESSIONAL REQUIREMENTS',
@@ -495,7 +559,7 @@ class OpeningViewDetailsPage extends StatelessWidget {
                 emptyIcon: Icons.psychology_outlined,
               ),
 
-              // ── TERMS & CONDITIONS ───────────────────────────────────────
+              // ── TERMS & CONDITIONS ────────────────────────────────────────
               _dynamicListCard(
                 context,
                 sectionTitle: 'TERMS & CONDITIONS',
@@ -505,6 +569,11 @@ class OpeningViewDetailsPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 8),
+
+              // ── APPLY NOW BUTTON ──────────────────────────────────────────
+              _applyNowButton(context),
+
+              const SizedBox(height: 24),
             ],
           ),
         ),

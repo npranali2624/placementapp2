@@ -24,12 +24,10 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
     end: Alignment.bottomRight,
   );
 
-  // ── SEARCH STATE ──────────────────────────────────────────
   bool _isSearching = false;
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // ── NOTIFICATION STATE ─────────────────────────────────────
   final List<Map<String, dynamic>> _notifications = [
     {
       'company': 'Infosys Ltd',
@@ -54,7 +52,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
   int get _unreadCount =>
       _notifications.where((n) => n['isRead'] == false).length;
 
-  // ── COMPANIES LIST ─────────────────────────────────────────
   final List<Map<String, dynamic>> companies = [
     {
       'name': 'Nexora Technologies',
@@ -128,7 +125,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
     super.dispose();
   }
 
-  // ── NAVIGATE TO EDIT PAGE ─────────────────────────────────
   Future<void> _navigateToEdit(Map<String, dynamic> company) async {
     final updated = await Navigator.push<Map<String, dynamic>>(
       context,
@@ -147,7 +143,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
     }
   }
 
-  // ── NOTIFICATION BOTTOM SHEET ──────────────────────────────
   void _showNotifications() {
     setState(() {
       for (var n in _notifications) {
@@ -271,12 +266,11 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
         child: Column(
           children: [
 
-            // ── TOP BAR ─────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
-                  // Title (hidden when searching)
+
                   if (!_isSearching)
                     const Expanded(
                       child: Column(
@@ -304,7 +298,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                       ),
                     ),
 
-                  // Search bar (expanded when active)
                   if (_isSearching)
                     Expanded(
                       child: Container(
@@ -351,7 +344,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
 
                   const SizedBox(width: 10),
 
-                  // Search icon button
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -388,7 +380,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
 
                   const SizedBox(width: 8),
 
-                  // Notification icon button with badge
                   GestureDetector(
                     onTap: _showNotifications,
                     child: Stack(
@@ -414,7 +405,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                             size: 20,
                           ),
                         ),
-                        // Unread badge
+
                         if (_unreadCount > 0)
                           Positioned(
                             top: -4,
@@ -447,7 +438,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
 
             const SizedBox(height: 20),
 
-            // ── COMPANY LIST ─────────────────────────────────
             Expanded(
               child: _filteredCompanies.isEmpty
                   ? Center(
@@ -559,7 +549,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                       ),
                     ),
 
-                    // ── PENCIL ICON → navigates to EditCompanyDetailsPage ──
                     GestureDetector(
                       onTap: () => _navigateToEdit(company),
                       child: Container(

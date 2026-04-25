@@ -1,95 +1,99 @@
 import 'package:flutter/material.dart';
-class JobOpening {
-  final String jobTitle;
-  final String coordinatorId;
-  final String company;
-  final String openingType;
-  final List<String> qualifications;
-  final String vacancies;
-  final bool isFresher;
-  final String expValue;
-  final String expUnit;
-  final String salaryMin;
-  final String salaryMax;
-  final String location;
-  final String jobTime;
-  final String timeConstraint;
-  final List<String> responsibilities;
-  final List<String> techRequirements;
-  final List<String> professionalRequirements;
-  final List<String> terms;
 
-  const JobOpening({
-    required this.jobTitle,
-    required this.coordinatorId,
-    required this.company,
-    required this.openingType,
-    required this.qualifications,
-    required this.vacancies,
-    required this.isFresher,
-    required this.expValue,
-    required this.expUnit,
-    required this.salaryMin,
-    required this.salaryMax,
-    required this.location,
-    required this.jobTime,
-    required this.timeConstraint,
-    required this.responsibilities,
-    required this.techRequirements,
-    required this.professionalRequirements,
-    required this.terms,
-  });
-}
-const _dummyOpening = JobOpening(
-  jobTitle: 'Backend Developer',
-  coordinatorId: 'TC-HR-2025',
-  company: 'Nexora Technologies',
-  openingType: 'Placement',
-  qualifications: [],
-  vacancies: '8',
-  isFresher: true,
-  expValue: '',
-  expUnit: 'Months',
-  salaryMin: '5',
-  salaryMax: '8',
-  location: 'Pune, Maharashtra',
-  jobTime: 'Full Time',
-  timeConstraint: '30 days',
-  responsibilities: [
-    'Develop REST APIs',
-    'Manage database schema and migrations',
-    'Perform code reviews',
-  ],
-  techRequirements: ['Node.js', 'PostgreSQL', 'Docker', 'Git'],
-  professionalRequirements: ['Good communication', 'Problem solving', 'Teamwork'],
-  terms: ['6 months probation', 'Performance-based conversion'],
-);
-
-// ═══════════════════════════════════════════════════════════════════════════════
-//  UpdateOpeningScreen
-// ═══════════════════════════════════════════════════════════════════════════════
-class UpdateOpeningScreen extends StatefulWidget {
-  final JobOpening opening;
-
-  const UpdateOpeningScreen({super.key, this.opening = _dummyOpening});
+class AddEditOpeningScreen extends StatefulWidget {
+  final bool isEdit;
+  const AddEditOpeningScreen({super.key, this.isEdit = true});
 
   @override
-  State<UpdateOpeningScreen> createState() => _UpdateOpeningScreenState();
+  State<AddEditOpeningScreen> createState() => _AddEditOpeningScreenState();
 }
 
-class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
+class _AddEditOpeningScreenState extends State<AddEditOpeningScreen>
     with SingleTickerProviderStateMixin {
-  static const Color bgColor      = Color(0xFFF1F5F9);
-  static const Color navyDark     = Color(0xFF1E3A8A);
-  static const Color blue         = Color(0xFF2563EB);
-  static const Color skyBlue      = Color(0xFF38BDF8);
-  static const Color labelColor   = Color(0xFF38BDF8);
-  static const Color textHead     = Color(0xFF1E293B);
-  static const Color textSub      = Color(0xFF64748B);
-  static const Color textMuted    = Color(0xFF94A3B8);
-  static const Color fieldBg      = Color(0xFFF1F5F9);
-  static const Color cardBg       = Colors.white;
-  static const Color accentOrange = Color(0xFFF97316);
+
+  static const Color bgColor    = Color(0xFFF1F5F9);
+  static const Color navyDark   = Color(0xFF1E3A8A);
+  static const Color blue       = Color(0xFF2563EB);
+  static const Color skyBlue    = Color(0xFF38BDF8);
+  static const Color labelColor = Color(0xFF38BDF8);
+  static const Color textHead   = Color(0xFF1E293B);
+  static const Color textSub    = Color(0xFF64748B);
+  static const Color textMuted  = Color(0xFF94A3B8);
+  static const Color fieldBg    = Color(0xFFF1F5F9);
+  static const Color cardBg     = Colors.white;
+
+  final _jobTitleCtrl       = TextEditingController(text: 'Backend Developer');
+  final _vacanciesCtrl      = TextEditingController(text: '8');
+  final _salaryMinCtrl      = TextEditingController(text: '5');
+  final _salaryMaxCtrl      = TextEditingController(text: '8');
+  final _timeConstraintCtrl = TextEditingController(text: '30 days');
+  final _expValueCtrl       = TextEditingController();
+
+  final List<TextEditingController> _responsibilityControllers = [];
+  final List<TextEditingController> _techReqControllers        = [];
+  final List<TextEditingController> _profReqControllers        = [];
+  final List<TextEditingController> _termsControllers          = [];
+
+  String selectedOpeningType = 'Placement';
+  String selectedCompany     = 'Nexora Technologies';
+  String selectedLocation    = 'Pune, Maharashtra';
+  String selectedJobTime     = 'Full Time';
+
+  final List<String> qualifications = [
+    'B.Tech', 'MCA', 'M.Sc', 'BCA', 'B.Sc',
+    'MBA', 'B.Com', 'M.Tech', 'Diploma', 'Any Graduate',
+  ];
+  final Set<String> selectedQualifications = {};
+
+  bool   isFresher       = true;
+  String selectedExpUnit = 'Months';
+
+  final openingTypes = ['Placement', 'Internship', 'Hybrid'];
+  final companies    = ['Nexora Technologies', 'ABC Corp', 'DEE Technologies'];
+  final locations    = ['Pune, Maharashtra', 'Mumbai, Maharashtra', 'Bengaluru, Karnataka', 'Remote'];
+  final jobTimes     = ['Full Time', 'Part Time', 'Contract'];
+
+  late AnimationController _animCtrl;
+  late Animation<double>   _fadeAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
+    _animCtrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _animCtrl.dispose();
+    _jobTitleCtrl.dispose();
+    _vacanciesCtrl.dispose();
+    _salaryMinCtrl.dispose();
+    _salaryMaxCtrl.dispose();
+    _timeConstraintCtrl.dispose();
+    _expValueCtrl.dispose();
+    for (final c in [
+      ..._responsibilityControllers,
+      ..._techReqControllers,
+      ..._profReqControllers,
+      ..._termsControllers,
+    ]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  void _addItem(List<TextEditingController> list) =>
+      setState(() => list.add(TextEditingController()));
+
+  void _removeItem(List<TextEditingController> list, int index) {
+    setState(() {
+      list[index].dispose();
+      list.removeAt(index);
+    });
+  }
 
   static const LinearGradient _primaryGradient = LinearGradient(
     colors: [navyDark, blue, skyBlue],
@@ -109,135 +113,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     end: Alignment.bottomRight,
   );
 
-  // ── Simple controllers ───────────────────────────────────────────────────────
-  late final TextEditingController _jobTitleCtrl;
-  late final TextEditingController _vacanciesCtrl;
-  late final TextEditingController _salaryMinCtrl;
-  late final TextEditingController _salaryMaxCtrl;
-  late final TextEditingController _timeConstraintCtrl;
-  late final TextEditingController _expValueCtrl;
-
-  // ── Dynamic list controllers ─────────────────────────────────────────────────
-  late final List<TextEditingController> _responsibilityControllers;
-  late final List<TextEditingController> _techReqControllers;
-  late final List<TextEditingController> _profReqControllers;
-  late final List<TextEditingController> _termsControllers;
-
-  // ── Dropdown / Toggle state ──────────────────────────────────────────────────
-  late String selectedOpeningType;
-  late String selectedCompany;
-  late String selectedLocation;
-  late String selectedJobTime;
-
-  // ── Multi-select qualifications ──────────────────────────────────────────────
-  final List<String> allQualifications = [
-    'B.Tech', 'MCA', 'M.Sc', 'BCA', 'B.Sc',
-    'MBA', 'B.Com', 'M.Tech', 'Diploma', 'Any Graduate',
-  ];
-  late Set<String> selectedQualifications;
-
-  // ── Experience state ─────────────────────────────────────────────────────────
-  late bool isFresher;
-  late String selectedExpUnit;
-
-  final openingTypes = ['Placement', 'Internship', 'Hybrid'];
-  final companies    = ['Nexora Technologies', 'ABC Corp', 'DEE Technologies'];
-  final locations    = [
-    'Pune, Maharashtra',
-    'Mumbai, Maharashtra',
-    'Bengaluru, Karnataka',
-    'Remote',
-  ];
-  final jobTimes = ['Full Time', 'Part Time', 'Contract'];
-
-  late AnimationController _animCtrl;
-  late Animation<double> _fadeAnim;
-
-  bool _hasChanges = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _jobTitleCtrl      = TextEditingController(text: widget.opening.jobTitle);
-    _vacanciesCtrl     = TextEditingController(text: widget.opening.vacancies);
-    _salaryMinCtrl     = TextEditingController(text: widget.opening.salaryMin);
-    _salaryMaxCtrl     = TextEditingController(text: widget.opening.salaryMax);
-    _timeConstraintCtrl= TextEditingController(text: widget.opening.timeConstraint);
-    _expValueCtrl      = TextEditingController(text: widget.opening.expValue);
-
-    _responsibilityControllers = widget.opening.responsibilities
-        .map((e) => TextEditingController(text: e))
-        .toList();
-    _techReqControllers = widget.opening.techRequirements
-        .map((e) => TextEditingController(text: e))
-        .toList();
-    _profReqControllers = widget.opening.professionalRequirements
-        .map((e) => TextEditingController(text: e))
-        .toList();
-    _termsControllers = widget.opening.terms
-        .map((e) => TextEditingController(text: e))
-        .toList();
-
-    selectedOpeningType    = widget.opening.openingType;
-    selectedCompany        = widget.opening.company;
-    selectedLocation       = widget.opening.location;
-    selectedJobTime        = widget.opening.jobTime;
-    selectedQualifications = Set<String>.from(widget.opening.qualifications);
-    isFresher              = widget.opening.isFresher;
-    selectedExpUnit        = widget.opening.expUnit;
-
-    _animCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
-    _animCtrl.forward();
-
-    for (final ctrl in _allSimpleControllers) {
-      ctrl.addListener(_markChanged);
-    }
-  }
-
-  List<TextEditingController> get _allSimpleControllers => [
-    _jobTitleCtrl, _vacanciesCtrl,
-    _salaryMinCtrl, _salaryMaxCtrl, _timeConstraintCtrl, _expValueCtrl,
-  ];
-
-  void _markChanged() {
-    if (!_hasChanges) setState(() => _hasChanges = true);
-  }
-
-  @override
-  void dispose() {
-    _animCtrl.dispose();
-    for (final ctrl in [
-      ..._allSimpleControllers,
-      ..._responsibilityControllers,
-      ..._techReqControllers,
-      ..._profReqControllers,
-      ..._termsControllers,
-    ]) {
-      ctrl.dispose();
-    }
-    super.dispose();
-  }
-
-  // ── Dynamic list helpers ─────────────────────────────────────────────────────
-  void _addItem(List<TextEditingController> list) {
-    setState(() {
-      list.add(TextEditingController());
-      _hasChanges = true;
-    });
-  }
-
-  void _removeItem(List<TextEditingController> list, int index) {
-    setState(() {
-      list[index].dispose();
-      list.removeAt(index);
-      _hasChanges = true;
-    });
-  }
-
-  // ── Input decoration ─────────────────────────────────────────────────────────
   InputDecoration _inputDeco({String? hint}) => InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(color: textMuted, fontSize: 12),
@@ -245,23 +120,25 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     fillColor: fieldBg,
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
     border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none),
     enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none),
     focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: blue, width: 1.5)),
   );
 
-  // ── Label ────────────────────────────────────────────────────────────────────
   Widget _label(String text) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Text(text,
         style: const TextStyle(
-            fontSize: 12, fontWeight: FontWeight.w600, color: labelColor)),
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: labelColor)),
   );
 
-  // ── Text field ───────────────────────────────────────────────────────────────
   Widget _field(String label, TextEditingController ctrl,
       {String? hint, TextInputType keyboardType = TextInputType.text}) {
     return Padding(
@@ -279,7 +156,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     );
   }
 
-  // ── Dropdown ─────────────────────────────────────────────────────────────────
   Widget _dropdown(String label, String value, List<String> items,
       {required ValueChanged<String?> onChanged}) {
     return Padding(
@@ -303,7 +179,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     );
   }
 
-  // ── Toggle row ───────────────────────────────────────────────────────────────
   Widget _toggleRow(String label, List<String> options, String selected,
       ValueChanged<String> onSelect) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -313,10 +188,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
           final sel = opt == selected;
           return Expanded(
             child: GestureDetector(
-              onTap: () {
-                onSelect(opt);
-                _markChanged();
-              },
+              onTap: () => onSelect(opt),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 margin: const EdgeInsets.only(right: 8, bottom: 14),
@@ -347,7 +219,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     ]);
   }
 
-  // ── Section title ─────────────────────────────────────────────────────────────
   Widget _sectionTitle(String title) => Padding(
     padding: const EdgeInsets.only(bottom: 10),
     child: Row(
@@ -371,7 +242,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     ),
   );
 
-  // ── Section card ─────────────────────────────────────────────────────────────
   Widget _sectionCard({required List<Widget> children}) => Container(
     padding: const EdgeInsets.all(16),
     margin: const EdgeInsets.only(bottom: 16),
@@ -389,22 +259,22 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
         crossAxisAlignment: CrossAxisAlignment.start, children: children),
   );
 
-  // ── Salary range ─────────────────────────────────────────────────────────────
+  // ── Salary Range ───────────────────────────────────────────────────────────
   Widget _salaryRange() {
     final isSalary = selectedOpeningType != 'Internship';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _label(isSalary ? 'Salary Range (LPA)' : 'Stipend Range (₹/month)'),
       Row(children: [
-        Expanded(
-            child: _miniField(_salaryMinCtrl, isSalary ? 'Min LPA' : 'Min ₹')),
+        Expanded(child: _miniField(_salaryMinCtrl, isSalary ? 'Min LPA' : 'Min ₹')),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text('to',
               style: const TextStyle(
-                  color: textMuted, fontWeight: FontWeight.w700, fontSize: 13)),
+                  color: textMuted,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13)),
         ),
-        Expanded(
-            child: _miniField(_salaryMaxCtrl, isSalary ? 'Max LPA' : 'Max ₹')),
+        Expanded(child: _miniField(_salaryMaxCtrl, isSalary ? 'Max LPA' : 'Max ₹')),
       ]),
     ]);
   }
@@ -418,7 +288,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     decoration: _inputDeco(hint: hint),
   );
 
-  // ── Multi-select qualification capsules ───────────────────────────────────────
   Widget _qualificationCapsules() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -430,27 +299,22 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: allQualifications.map((q) {
+            children: qualifications.map((q) {
               final isSel = selectedQualifications.contains(q);
               return GestureDetector(
-                onTap: () => setState(() {
-                  isSel
-                      ? selectedQualifications.remove(q)
-                      : selectedQualifications.add(q);
-                  _hasChanges = true;
-                }),
+                onTap: () => setState(() => isSel
+                    ? selectedQualifications.remove(q)
+                    : selectedQualifications.add(q)),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     gradient: isSel ? _primaryGradient : null,
                     color: isSel ? null : fieldBg,
                     borderRadius: BorderRadius.circular(30),
                     border: isSel
                         ? null
-                        : Border.all(
-                        color: blue.withValues(alpha: 0.25), width: 1),
+                        : Border.all(color: blue.withValues(alpha: 0.25), width: 1),
                     boxShadow: isSel
                         ? [BoxShadow(
                         color: blue.withValues(alpha: 0.25),
@@ -462,8 +326,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (isSel) ...[
-                        const Icon(Icons.check_rounded,
-                            color: Colors.white, size: 13),
+                        const Icon(Icons.check_rounded, color: Colors.white, size: 13),
                         const SizedBox(width: 4),
                       ],
                       Text(q,
@@ -494,7 +357,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     );
   }
 
-  // ── Experience section ────────────────────────────────────────────────────────
   Widget _experienceSection() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
@@ -507,10 +369,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
               final sel = (opt == 'Fresher') == isFresher;
               return Expanded(
                 child: GestureDetector(
-                  onTap: () => setState(() {
-                    isFresher = opt == 'Fresher';
-                    _hasChanges = true;
-                  }),
+                  onTap: () => setState(() => isFresher = opt == 'Fresher'),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     margin: const EdgeInsets.only(right: 8, bottom: 12),
@@ -573,26 +432,19 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                         final sel = unit == selectedExpUnit;
                         return Expanded(
                           child: GestureDetector(
-                            onTap: () => setState(() {
-                              selectedExpUnit = unit;
-                              _hasChanges = true;
-                            }),
+                            onTap: () =>
+                                setState(() => selectedExpUnit = unit),
                             child: AnimatedContainer(
-                              duration:
-                              const Duration(milliseconds: 200),
+                              duration: const Duration(milliseconds: 200),
                               margin: const EdgeInsets.only(right: 6),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                               decoration: BoxDecoration(
-                                gradient:
-                                sel ? _primaryGradient : null,
+                                gradient: sel ? _primaryGradient : null,
                                 color: sel ? null : fieldBg,
-                                borderRadius:
-                                BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12),
                                 boxShadow: sel
                                     ? [BoxShadow(
-                                    color: blue.withValues(
-                                        alpha: 0.30),
+                                    color: blue.withValues(alpha: 0.30),
                                     blurRadius: 8,
                                     offset: const Offset(0, 3))]
                                     : [],
@@ -602,9 +454,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
-                                        color: sel
-                                            ? Colors.white
-                                            : textSub)),
+                                        color: sel ? Colors.white : textSub)),
                               ),
                             ),
                           ),
@@ -622,8 +472,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                       color: blue.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                          color: blue.withValues(alpha: 0.25),
-                          width: 1),
+                          color: blue.withValues(alpha: 0.25), width: 1),
                     ),
                     child: Text(
                       '${_expValueCtrl.text} $selectedExpUnit experience required',
@@ -643,7 +492,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     );
   }
 
-  // ── Dynamic list section ─────────────────────────────────────────────────────
   Widget _dynamicListSection({
     required String sectionTitle,
     required String itemLabel,
@@ -698,7 +546,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                       Expanded(
                         child: TextField(
                           controller: ctrl,
-                          onChanged: (_) => _markChanged(),
                           style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -781,63 +628,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
     );
   }
 
-  // ── Save confirmation dialog ──────────────────────────────────────────────────
-  void _showSaveConfirm() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(children: [
-          Icon(Icons.edit_note_rounded, color: blue),
-          SizedBox(width: 8),
-          Text('Update Opening',
-              style:
-              TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-        ]),
-        content: const Text(
-            'Are you sure you want to save the changes to this opening?',
-            style: TextStyle(color: textSub, fontSize: 13)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child:
-            const Text('Cancel', style: TextStyle(color: textMuted)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: blue,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Row(children: [
-                    Icon(Icons.check_circle_rounded,
-                        color: Colors.white, size: 18),
-                    SizedBox(width: 8),
-                    Text('Opening updated successfully!'),
-                  ]),
-                  backgroundColor: const Color(0xFF22C55E),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              );
-              setState(() => _hasChanges = false);
-            },
-            child: const Text('Update',
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w700)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ── BUILD ────────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -849,7 +639,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
             padding: const EdgeInsets.all(16),
             child: Column(children: [
 
-              // ── HEADER ──────────────────────────────────────────────────────
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -859,8 +648,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 child: Row(children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child:
-                    const Icon(Icons.arrow_back, color: Colors.white),
+                    child: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
                   const SizedBox(width: 12),
                   Container(
@@ -870,8 +658,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16)),
                     child: const Center(
-                        child: Icon(Icons.edit_note_rounded,
-                            color: blue, size: 28)),
+                        child: Icon(Icons.work_rounded, color: blue, size: 28)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -879,7 +666,7 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Update Opening",
+                            "Add Opening",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -891,33 +678,15 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                                   color: Colors.white70, fontSize: 13)),
                         ]),
                   ),
-                  if (_hasChanges)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: accentOrange,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text('Unsaved',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700)),
-                    ),
                 ]),
               ),
 
               const SizedBox(height: 20),
 
-              // ── JOB DETAILS ──────────────────────────────────────────────
               _sectionTitle("JOB DETAILS"),
               _sectionCard(children: [
                 _dropdown('Company', selectedCompany, companies,
-                    onChanged: (v) => setState(() {
-                      selectedCompany = v!;
-                      _hasChanges = true;
-                    })),
+                    onChanged: (v) => setState(() => selectedCompany = v!)),
                 _field('Job Title', _jobTitleCtrl),
                 _toggleRow('Opening Type', openingTypes, selectedOpeningType,
                         (v) => setState(() => selectedOpeningType = v)),
@@ -927,25 +696,19 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 _experienceSection(),
               ]),
 
-              // ── COMPENSATION ─────────────────────────────────────────────
               _sectionTitle("COMPENSATION"),
               _sectionCard(children: [_salaryRange()]),
 
-              // ── LOCATION & SCOPE ─────────────────────────────────────────
               _sectionTitle("LOCATION & SCOPE"),
               _sectionCard(children: [
                 _dropdown('Work Location', selectedLocation, locations,
-                    onChanged: (v) => setState(() {
-                      selectedLocation = v!;
-                      _hasChanges = true;
-                    })),
+                    onChanged: (v) => setState(() => selectedLocation = v!)),
                 _toggleRow('Job Time', jobTimes, selectedJobTime,
                         (v) => setState(() => selectedJobTime = v)),
                 _field('Time Constraint', _timeConstraintCtrl,
                     hint: 'e.g. 30 days'),
               ]),
 
-              // ── RESPONSIBILITIES ──────────────────────────────────────────
               _dynamicListSection(
                 sectionTitle: 'RESPONSIBILITIES',
                 itemLabel: 'Responsibility',
@@ -954,7 +717,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 sectionIcon: Icons.checklist_rounded,
               ),
 
-              // ── TECHNICAL REQUIREMENTS ────────────────────────────────────
               _dynamicListSection(
                 sectionTitle: 'TECHNICAL REQUIREMENTS',
                 itemLabel: 'Tech Skill',
@@ -963,7 +725,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 sectionIcon: Icons.code_rounded,
               ),
 
-              // ── PROFESSIONAL REQUIREMENTS ─────────────────────────────────
               _dynamicListSection(
                 sectionTitle: 'PROFESSIONAL REQUIREMENTS',
                 itemLabel: 'Prof. Skill',
@@ -972,7 +733,6 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 sectionIcon: Icons.psychology_outlined,
               ),
 
-              // ── TERMS & CONDITIONS ────────────────────────────────────────
               _dynamicListSection(
                 sectionTitle: 'TERMS & CONDITIONS',
                 itemLabel: 'Term',
@@ -981,9 +741,8 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                 sectionIcon: Icons.gavel_rounded,
               ),
 
-              // ── UPDATE BUTTON ────────────────────────────────────────────
               GestureDetector(
-                onTap: _showSaveConfirm,
+                onTap: () {},
                 child: Container(
                   height: 55,
                   decoration: BoxDecoration(
@@ -999,11 +758,11 @@ class _UpdateOpeningScreenState extends State<UpdateOpeningScreen>
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.update_rounded,
+                      Icon(Icons.check_circle_rounded,
                           color: Colors.white, size: 20),
                       SizedBox(width: 8),
                       Text(
-                        "UPDATE OPENING",
+                        "SAVE OPENING",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,

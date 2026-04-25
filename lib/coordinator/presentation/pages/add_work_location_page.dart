@@ -13,7 +13,10 @@ class AddWorkLocationPage extends StatefulWidget {
 
 class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
 
-  static const Color bgColor = Color(0xFFF1F5F9);
+  static const Color bgColor  = Color(0xFFF1F5F9);
+  static const Color navyDark = Color(0xFF1E3A8A);
+  static const Color blue     = Color(0xFF2563EB);
+  static const Color skyBlue  = Color(0xFF38BDF8);
 
   final List<Map<String, TextEditingController>> _locations = [];
 
@@ -33,10 +36,10 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
   void _addLocation() {
     setState(() {
       _locations.add({
-        'address': TextEditingController(),
+        'address':           TextEditingController(),
         'contactpersonname': TextEditingController(),
-        'contactNumber': TextEditingController(),
-        'mail': TextEditingController(),
+        'contactNumber':     TextEditingController(),
+        'mail':              TextEditingController(),
       });
     });
   }
@@ -44,43 +47,46 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
   void _removeLocation(int index) {
     if (_locations.length == 1) return;
     setState(() {
+      for (final ctrl in _locations[index].values) ctrl.dispose();
       _locations.removeAt(index);
     });
+  }
+
+  @override
+  void dispose() {
+    for (final loc in _locations) {
+      for (final ctrl in loc.values) ctrl.dispose();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
 
-              /// 🔷 HEADER (NEW UI)
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF1E3A8A),
-                      Color(0xFF2563EB),
-                      Color(0xFF38BDF8),
-                    ],
+                    colors: [navyDark, blue, skyBlue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
                 ),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back,
-                          color: Colors.white),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
                     ),
                     const SizedBox(width: 12),
-
                     Container(
                       width: 60,
                       height: 60,
@@ -88,11 +94,15 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Icon(Icons.location_on,
-                          color: Color(0xFF2563EB)),
+                      child: const Center(
+                        child: Icon(
+                          Icons.location_on_rounded,
+                          color: blue,
+                          size: 30,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,25 +111,27 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
                             selectedCompany,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
                             ),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             "Add multiple work locations",
-                            style: TextStyle(color: Colors.white70),
-                          )
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 13,
+                            ),
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              /// 🔷 COMPANY DROPDOWN
               _sectionTitle("COMPANY"),
               _card(
                 child: _dropdown(
@@ -131,14 +143,12 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
 
               const SizedBox(height: 20),
 
-              /// 🔷 LOCATION CARDS
-              ..._locations.asMap().entries.map((entry) {
-                return _locationCard(entry.key, entry.value);
-              }),
+              _sectionTitle("WORK LOCATIONS"),
 
-              const SizedBox(height: 12),
+              ..._locations.asMap().entries.map(
+                    (entry) => _locationCard(entry.key, entry.value),
+              ),
 
-              /// 🔷 ADD LOCATION BUTTON
               GestureDetector(
                 onTap: _addLocation,
                 child: Container(
@@ -146,48 +156,75 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Color(0xFF2563EB)),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Add Another Location",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2563EB),
+                    border: Border.all(color: blue, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: blue.withOpacity(0.08),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
                       ),
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_location_alt_rounded,
+                          color: blue, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        "Add Another Location",
+                        style: TextStyle(
+                          color: blue,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              GestureDetector(
+                onTap: _onSave,
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [navyDark, blue, skyBlue],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: blue.withOpacity(0.35),
+                        blurRadius: 14,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.save_rounded, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        "SAVE LOCATIONS",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
 
               const SizedBox(height: 20),
-
-              /// 🔷 SAVE BUTTON
-              GestureDetector(
-                onTap: _onSave,
-                child: Container(
-                  height: 55,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF1E3A8A),
-                        Color(0xFF2563EB),
-                        Color(0xFF38BDF8),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "SAVE LOCATIONS",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -195,9 +232,9 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
     );
   }
 
-  /// 🔷 LOCATION CARD
-  Widget _locationCard(
-      int index, Map<String, TextEditingController> loc) {
+  Widget _locationCard(int index, Map<String, TextEditingController> loc) {
+    final isFirst = index == 0;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(16),
@@ -208,38 +245,67 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Row(
             children: [
-              Text(
-                "Location ${index + 1}",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14),
+              Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [navyDark, blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  isFirst ? "Location 1" : "Location ${index + 1}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               const Spacer(),
-              IconButton(
-                onPressed: () => _removeLocation(index),
-                icon: const Icon(Icons.delete, color: Colors.red),
-              )
+              if (!isFirst)
+                GestureDetector(
+                  onTap: () => _removeLocation(index),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.red.shade400,
+                      size: 20,
+                    ),
+                  ),
+                ),
             ],
           ),
 
-          _field("Address", loc['address']!),
+          const SizedBox(height: 14),
+
+          _field("Address",        loc['address']!),
           _field("Contact Person", loc['contactpersonname']!),
-          _field("Phone", loc['contactNumber']!),
-          _field("Email", loc['mail']!),
+          _field(" Contact Number",          loc['contactNumber']!),
+          _field(" Location Email",          loc['mail']!),
         ],
       ),
     );
   }
 
-  /// 🔷 FIELD (LOGIN STYLE)
   Widget _field(String label, TextEditingController ctrl) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -250,26 +316,34 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
             label,
             style: const TextStyle(
               fontSize: 12,
-              color: Color(0xFF38BDF8),
+              color: skyBlue,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 6),
           TextField(
             controller: ctrl,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF1E293B),
+              fontWeight: FontWeight.w500,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: const Color(0xFFF1F5F9),
+              fillColor: bgColor,
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(
-                  color: Color(0xFF2563EB),
-                  width: 1.5,
-                ),
+                borderSide: const BorderSide(color: blue, width: 1.5),
               ),
             ),
           ),
@@ -278,28 +352,25 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
     );
   }
 
-  /// 🔷 DROPDOWN (LOGIN STYLE)
-  Widget _dropdown(String value, List<String> items,
-      Function(String?) onChanged) {
+  Widget _dropdown(
+      String value, List<String> items, Function(String?) onChanged) {
     return DropdownButtonFormField<String>(
       value: value,
-      items: items
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-          .toList(),
+      items:
+      items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
       onChanged: onChanged,
       decoration: InputDecoration(
         filled: true,
-        fillColor: const Color(0xFFF1F5F9),
+        fillColor: bgColor,
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFF2563EB),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: blue, width: 1.5),
         ),
       ),
     );
@@ -309,12 +380,14 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.only(bottom: 8),
         child: Text(
           title,
           style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
+            color: Color(0xFF1E293B),
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+            letterSpacing: 0.4,
           ),
         ),
       ),
@@ -327,6 +400,13 @@ class _AddWorkLocationPageState extends State<AddWorkLocationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: child,
     );

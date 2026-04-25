@@ -4,6 +4,7 @@ import '../pages/edit_student_profile_page.dart';
 class StudentProfilePage extends StatelessWidget {
   const StudentProfilePage({super.key});
 
+  // 🔹 DATA
   static const String name    = "Rahul Sharma";
   static const String email   = "rahul.sharma@email.com";
   static const String phone   = "+91 98765 43210";
@@ -16,19 +17,24 @@ class StudentProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD5EDE3),
+      backgroundColor: const Color(0xFFF1F5F9),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              // HEADER
+
+              /// 🔷 PROFILE HEADER
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF1ABC9C), Color(0xFF3498DB)],
+                    colors: [
+                      Color(0xFF1E3A8A),
+                      Color(0xFF2563EB),
+                      Color(0xFF38BDF8),
+                    ],
                   ),
                 ),
                 child: Row(
@@ -45,12 +51,15 @@ class StudentProfilePage extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      child: const Center(
-                        child: Text("RS",
-                            style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1ABC9C))),
+                      child: Center(
+                        child: Text(
+                          "RS",
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade800,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -73,6 +82,7 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              /// 🔷 CONTACT
               _sectionTitle("CONTACT"),
               _infoTile(Icons.email, "Email", email),
               _infoTile(Icons.phone, "Phone", phone),
@@ -80,6 +90,7 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              /// 🔷 ACADEMIC DETAILS
               _sectionTitle("ACADEMIC DETAILS"),
               _infoTile(Icons.book, "Course", course),
               _infoTile(Icons.calendar_today, "Year", year),
@@ -87,12 +98,13 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              /// 🔷 SKILLS
               _sectionTitle("SKILLS"),
               _infoTile(Icons.code, "Technical Skills", skills),
 
               const SizedBox(height: 30),
 
-              // UPDATE BUTTON
+              /// 🔷 UPDATE BUTTON
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -104,15 +116,19 @@ class StudentProfilePage extends StatelessWidget {
                 },
                 child: Container(
                   height: 55,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF1ABC9C), Color(0xFF3498DB)],
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF1E3A8A),
+                        Color(0xFF2563EB),
+                        Color(0xFF38BDF8),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                   child: const Center(
                     child: Text(
-                      "Edit Profile",
+                      "Update Profile",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -128,18 +144,24 @@ class StudentProfilePage extends StatelessWidget {
     );
   }
 
+  /// 🔹 SECTION TITLE
   Widget _sectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text(title,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w600)),
+        child: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
 
+  /// 🔹 INFO TILE
   Widget _infoTile(IconData icon, String label, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -151,8 +173,8 @@ class StudentProfilePage extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: const Color(0xFFD5EDE3),
-            child: Icon(icon, color: const Color(0xFF1ABC9C)),
+            backgroundColor: const Color(0xFFE0F2FE),
+            child: Icon(icon, color: const Color(0xFF2563EB)),
           ),
           const SizedBox(width: 12),
           Column(

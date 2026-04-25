@@ -8,37 +8,58 @@ class RegisterCompanyPage extends StatefulWidget {
 }
 
 class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
-  // ── Palette (matches coordinator profile & dashboard) ──────────────────────
-  static const Color bgColor      = Color(0xFFF1F5F9);
-  static const Color navyDark     = Color(0xFF1E3A8A);
-  static const Color blue         = Color(0xFF2563EB);
-  static const Color skyBlue      = Color(0xFF38BDF8);
-  static const Color labelColor   = Color(0xFF38BDF8);
+  // ── Palette ────────────────────────────────────────────────────────────────
+  static const Color bgColor    = Color(0xFFF1F5F9);
+  static const Color navyDark   = Color(0xFF1E3A8A);
+  static const Color blue       = Color(0xFF2563EB);
+  static const Color skyBlue    = Color(0xFF38BDF8);
+  static const Color labelColor = Color(0xFF38BDF8);
 
   // Controllers – Basic Info
-  final _companyNameCtrl    = TextEditingController(text: "Nexora Technologies Pvt. Ltd.");
-  final _strengthCtrl       = TextEditingController(text: "350 employees");
-  final _companyEmailCtrl   = TextEditingController(text: "hr@nexoratech.com");
+  final _companyNameCtrl  = TextEditingController(text: "Nexora Technologies Pvt. Ltd.");
+  final _strengthCtrl     = TextEditingController(text: "350 employees");
+  final _companyEmailCtrl = TextEditingController(text: "hr@nexoratech.com");
 
-  // Controllers – Primary Work Location
-  final _cityCtrl           = TextEditingController(text: "Pune, Maharashtra");
-  final _hrContactCtrl      = TextEditingController(text: "Priya Sharma");
-  final _contactNumCtrl     = TextEditingController(text: "+91 98765 43210");
-  final _locationEmailCtrl  = TextEditingController(text: "pune.hr@nexoratech.com");
+  // Multiple work locations
+  final List<Map<String, TextEditingController>> _locations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _addLocation(); // start with one location
+  }
+
+  void _addLocation() {
+    setState(() {
+      _locations.add({
+        'address':       TextEditingController(),
+        'hrContact':     TextEditingController(),
+        'contactNumber': TextEditingController(),
+        'email':         TextEditingController(),
+      });
+    });
+  }
+
+  void _removeLocation(int index) {
+    if (_locations.length == 1) return; // keep at least one
+    setState(() {
+      for (final ctrl in _locations[index].values) ctrl.dispose();
+      _locations.removeAt(index);
+    });
+  }
 
   @override
   void dispose() {
     _companyNameCtrl.dispose();
     _strengthCtrl.dispose();
     _companyEmailCtrl.dispose();
-    _cityCtrl.dispose();
-    _hrContactCtrl.dispose();
-    _contactNumCtrl.dispose();
-    _locationEmailCtrl.dispose();
+    for (final loc in _locations) {
+      for (final ctrl in loc.values) ctrl.dispose();
+    }
     super.dispose();
   }
 
-  // ── Field Widget ────────────────────────────────────────────────────────────
+  // ── Labeled Field ──────────────────────────────────────────────────────────
   Widget _field({
     required String label,
     required TextEditingController controller,
@@ -96,7 +117,7 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
     );
   }
 
-  // ── Section Title ────────────────────────────────────────────────────────────
+  // ── Section Title ──────────────────────────────────────────────────────────
   Widget _sectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -115,7 +136,7 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
     );
   }
 
-  // ── Section Card ─────────────────────────────────────────────────────────────
+  // ── Section Card ───────────────────────────────────────────────────────────
   Widget _sectionCard({required List<Widget> children}) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -137,18 +158,105 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
     );
   }
 
+  // ── Location Card ──────────────────────────────────────────────────────────
+  Widget _locationCard(int index, Map<String, TextEditingController> loc) {
+    final isFirst = index == 0;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Card header row
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [navyDark, blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  isFirst ? "Primary Location" : "Location ${index + 1}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              if (!isFirst)
+                GestureDetector(
+                  onTap: () => _removeLocation(index),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.red.shade400,
+                      size: 20,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          _field(
+            label: "Address",
+            controller: loc['address']!,
+          ),
+          _field(
+            label: "Contact Person",
+            controller: loc['hrContact']!,
+          ),
+          _field(
+            label: "Contact Number",
+            controller: loc['contactNumber']!,
+            keyboardType: TextInputType.phone,
+          ),
+          _field(
+            label: "Location Email",
+            controller: loc['email']!,
+            keyboardType: TextInputType.emailAddress,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
 
-              // ── HEADER (same style as EditCoordinatorProfilePage) ──────────
+              // ── HEADER ───────────────────────────────────────────────────
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -166,8 +274,6 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
                       child: const Icon(Icons.arrow_back, color: Colors.white),
                     ),
                     const SizedBox(width: 12),
-
-                    // Company icon placeholder
                     Container(
                       width: 60,
                       height: 60,
@@ -184,7 +290,6 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
                       ),
                     ),
                     const SizedBox(width: 12),
-
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -212,53 +317,72 @@ class _RegisterCompanyPageState extends State<RegisterCompanyPage> {
 
               const SizedBox(height: 20),
 
-              // ── BASIC INFORMATION ──────────────────────────────────────────
+              // ── BASIC INFORMATION ────────────────────────────────────────
               _sectionTitle("BASIC INFORMATION"),
               _sectionCard(children: [
                 _field(
-                  label: "Company Name ",
+                  label: "Company Name",
                   controller: _companyNameCtrl,
                 ),
                 _field(
-                  label: "Company Strength ",
+                  label: "Company Strength",
                   controller: _strengthCtrl,
-                  keyboardType: TextInputType.text,
                 ),
                 _field(
-                  label: "Official Company Email ",
+                  label: "Official Company Email",
                   controller: _companyEmailCtrl,
                   keyboardType: TextInputType.emailAddress,
                 ),
               ]),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
-              // ── PRIMARY WORK LOCATION ──────────────────────────────────────
-              _sectionTitle("PRIMARY WORK LOCATION"),
-              _sectionCard(children: [
-                _field(
-                  label: "City / Address ",
-                  controller: _cityCtrl,
+              // ── WORK LOCATIONS ───────────────────────────────────────────
+              _sectionTitle("WORK LOCATIONS"),
+
+              ..._locations.asMap().entries.map(
+                    (entry) => _locationCard(entry.key, entry.value),
+              ),
+
+              // ── ADD ANOTHER LOCATION BUTTON ──────────────────────────────
+              GestureDetector(
+                onTap: _addLocation,
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: blue, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: blue.withOpacity(0.08),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_location_alt_rounded,
+                          color: blue, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        "Add Another Location",
+                        style: TextStyle(
+                          color: blue,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                _field(
-                  label: "HR Contact Person ",
-                  controller: _hrContactCtrl,
-                ),
-                _field(
-                  label: "Contact Number ",
-                  controller: _contactNumCtrl,
-                  keyboardType: TextInputType.phone,
-                ),
-                _field(
-                  label: "Location Email",
-                  controller: _locationEmailCtrl,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ]),
+              ),
 
               const SizedBox(height: 24),
 
-              // ── REGISTER BUTTON ────────────────────────────────────────────
+              // ── REGISTER BUTTON ──────────────────────────────────────────
               GestureDetector(
                 onTap: () {
                   // TODO: handle registration
