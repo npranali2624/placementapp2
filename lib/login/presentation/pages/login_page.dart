@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // 🔵 Custom Modern Logo
+  //  Custom Modern Logo
   Widget _logo() {
     return Container(
       width: 110,

@@ -11,7 +11,6 @@ class StudentOpeningsPage extends StatefulWidget {
 class _StudentOpeningsPageState extends State<StudentOpeningsPage>
     with SingleTickerProviderStateMixin {
 
-  // ── Palette ────────────────────────────────────────────────────────────────
   static const Color bgColor   = Color(0xFFF1F5F9);
   static const Color navyDark  = Color(0xFF1E3A8A);
   static const Color blue      = Color(0xFF2563EB);
@@ -27,7 +26,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
     end: Alignment.bottomRight,
   );
 
-  // ── Search / Filter State ──────────────────────────────────────────────────
+  //  Search / Filter State
   bool _isSearching   = false;
   String _searchQuery = '';
   String _activeFilter = 'All';
@@ -36,7 +35,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
 
-  // ── Sample Openings Data ───────────────────────────────────────────────────
+  //Sample Openings Data
   final List<Map<String, dynamic>> _openings = [
     {
       'initial'                 : 'T',
@@ -316,7 +315,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
           opacity: _fadeAnim,
           child: Column(children: [
 
-            // ── TOP BAR ────────────────────────────────────────────────────
+            //TOP BAR
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(children: [
@@ -428,7 +427,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
 
             const SizedBox(height: 16),
 
-            // ── FILTER CHIPS ───────────────────────────────────────────────
+            // FILTER CHIPS
             SizedBox(
               height: 36,
               child: ListView.separated(
@@ -475,7 +474,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
 
             const SizedBox(height: 8),
 
-            // ── COUNT LINE ─────────────────────────────────────────────────
+            // COUNT LINE
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
               child: Row(children: [
@@ -488,7 +487,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
 
             const SizedBox(height: 8),
 
-            // ── OPENING LIST ───────────────────────────────────────────────
+            // OPENING LIST
             Expanded(
               child: _filteredOpenings.isEmpty
                   ? Center(
@@ -520,7 +519,7 @@ class _StudentOpeningsPageState extends State<StudentOpeningsPage>
     );
   }
 
-  // ── Opening Card ───────────────────────────────────────────────────────────
+  //Opening Card
   Widget _openingCard(Map<String, dynamic> o) {
     final Color cardColor = o['companyColor'] as Color;
     final Color cardBg    = o['companyBg']    as Color;

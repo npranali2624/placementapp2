@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-
+//USE IN DASHBOARD PAGE AND OPENING PAGE
 class JobCard extends StatelessWidget {
   final String title;
   final String company;

@@ -12,7 +12,7 @@ class StudentDashboardPage extends StatefulWidget {
 }
 
 class _StudentDashboardPageState extends State<StudentDashboardPage> {
-  // ── Palette ────────────────────────────────────────────────────────────────
+
   static const Color bgColor   = Color(0xFFF1F5F9);
   static const Color navyDark  = Color(0xFF1E3A8A);
   static const Color blue      = Color(0xFF2563EB);
@@ -30,7 +30,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
   int _currentIndex = 0;
 
-  // ── Job data — ALL keys match OpeningViewDetailsPage exactly ──────────────
   final List<Map<String, dynamic>> _jobs = [
     {
       'initial'      : 'T',
@@ -206,7 +205,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     },
   ];
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
   void _logout() {
     Navigator.pushAndRemoveUntil(
       context,
@@ -261,13 +259,11 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     );
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
 
-      // ── Drawer ────────────────────────────────────────────────────────────
       drawer: Drawer(
         child: Column(
           children: [
@@ -326,7 +322,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         ),
       ),
 
-      // ── AppBar (Home tab only) ─────────────────────────────────────────────
       appBar: _currentIndex == 0
           ? AppBar(
         backgroundColor: bgColor,
@@ -360,7 +355,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
       )
           : null,
 
-      // ── IndexedStack ───────────────────────────────────────────────────────
       body: IndexedStack(
         index: _currentIndex,
         children: [
@@ -372,7 +366,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         ],
       ),
 
-      // ── Bottom Nav ─────────────────────────────────────────────────────────
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -393,7 +386,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     );
   }
 
-  // ── Home Page ──────────────────────────────────────────────────────────────
   Widget _buildHomePage() {
     return SafeArea(
       child: SingleChildScrollView(
@@ -460,7 +452,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     );
   }
 
-  // ── Job Card ───────────────────────────────────────────────────────────────
   Widget _jobCard(Map<String, dynamic> o) {
     final Color cardColor = o['companyColor'] as Color;
     final Color cardBg    = o['companyBg']    as Color;
@@ -629,7 +620,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
   }
 }
 
-// ── Stat Card ──────────────────────────────────────────────────────────────────
 class _StatCard extends StatelessWidget {
   final String number;
   final String label;

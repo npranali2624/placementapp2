@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 class StudentJobApplyPage extends StatefulWidget {
   final String jobTitle;
   final String company;
-
-  /// Pre-filled, non-editable data coming from the student's profile.
-  /// Keys expected: name, email, phone, course, cgpa, specialization
+  // Pre-filled, non-editable data coming from the student's profile.
   final Map<String, String> profileData;
 
   const StudentJobApplyPage({
@@ -21,7 +19,7 @@ class StudentJobApplyPage extends StatefulWidget {
 
 class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
 
-  // ── Editable controllers ───────────────────────────────────────────────────
+  //Editable controllers
   final TextEditingController skillsController       = TextEditingController();
   final TextEditingController coverLetterController  = TextEditingController();
   final TextEditingController toolsController        = TextEditingController();
@@ -34,7 +32,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
   bool isAvailable = true;
   bool agreeTerms  = false;
 
-  // ── Palette (mirrors OpeningViewDetailsPage) ───────────────────────────────
+
   static const Color bgColor   = Color(0xFFF1F5F9);
   static const Color navyDark  = Color(0xFF1E3A8A);
   static const Color blue      = Color(0xFF2563EB);
@@ -64,7 +62,6 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
     super.dispose();
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +73,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // ── HEADER ──────────────────────────────────────────────────
+              //HEADER
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -131,7 +128,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
 
               const SizedBox(height: 20),
 
-              // ── PERSONAL DETAILS (locked) ────────────────────────────────
+              //PERSONAL DETAILS (locked)
               _sectionTitle('PERSONAL DETAILS'),
               _sectionCard(
                 icon: Icons.person_rounded,
@@ -145,7 +142,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── SKILLS & TOOLS ───────────────────────────────────────────
+              // SKILLS & TOOLs
               _sectionTitle('SKILLS & TOOLS'),
               _sectionCard(
                 icon: Icons.code_rounded,
@@ -155,7 +152,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── PROFILES ────────────────────────────────────────────────
+              //PROFILES
               _sectionTitle('PROFILES'),
               _sectionCard(
                 icon: Icons.link_rounded,
@@ -165,7 +162,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── EXPERIENCE ──────────────────────────────────────────────
+              //EXPERIENCE
               _sectionTitle('EXPERIENCE'),
               _sectionCard(
                 icon: Icons.work_history_rounded,
@@ -175,7 +172,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── PROJECTS ────────────────────────────────────────────────
+              //PROJECTS
               _sectionTitle('PROJECTS'),
               _sectionCard(
                 icon: Icons.build_rounded,
@@ -185,7 +182,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── CERTIFICATES ─────────────────────────────────────────────
+              //CERTIFICATES
               _sectionTitle('CERTIFICATES / ACHIEVEMENTS'),
               _sectionCard(
                 icon: Icons.emoji_events_rounded,
@@ -196,7 +193,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── RESUME ──────────────────────────────────────────────────
+              // RESUME
               _sectionTitle('RESUME'),
               _sectionCard(
                 icon: Icons.upload_file_rounded,
@@ -256,7 +253,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── COVER LETTER ─────────────────────────────────────────────
+              // COVER LETTER
               _sectionTitle('COVER LETTER'),
               _sectionCard(
                 icon: Icons.description_rounded,
@@ -268,7 +265,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ],
               ),
 
-              // ── AVAILABILITY ─────────────────────────────────────────────
+              //AVAILABILITY
               _sectionTitle('AVAILABILITY'),
               _sectionCard(
                 icon: Icons.access_time_rounded,
@@ -313,7 +310,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
 
               const SizedBox(height: 4),
 
-              // ── TERMS CHECKBOX ───────────────────────────────────────────
+              //TERMS CHECKBOX
               Container(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 14, vertical: 10),
@@ -357,7 +354,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
                 ),
               ),
 
-              // ── SUBMIT BUTTON ────────────────────────────────────────────
+              //SUBMIT BUTTON
               GestureDetector(
                 onTap: () {
                   if (!agreeTerms) {
@@ -423,7 +420,7 @@ class _StudentJobApplyPageState extends State<StudentJobApplyPage> {
     );
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // Helpers
 
   Widget _sectionTitle(String title) => Padding(
     padding: const EdgeInsets.only(bottom: 10),

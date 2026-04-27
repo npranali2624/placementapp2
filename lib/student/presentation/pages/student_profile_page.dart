@@ -4,7 +4,7 @@ import '../pages/edit_student_profile_page.dart';
 class StudentProfilePage extends StatelessWidget {
   const StudentProfilePage({super.key});
 
-  // 🔹 DATA
+  //  DATA
   static const String name    = "Rahul Sharma";
   static const String email   = "rahul.sharma@email.com";
   static const String phone   = "+91 98765 43210";
@@ -24,7 +24,7 @@ class StudentProfilePage extends StatelessWidget {
           child: Column(
             children: [
 
-              /// 🔷 PROFILE HEADER
+              //PROFILE HEADER
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              /// 🔷 CONTACT
+              //CONTACT
               _sectionTitle("CONTACT"),
               _infoTile(Icons.email, "Email", email),
               _infoTile(Icons.phone, "Phone", phone),
@@ -90,7 +90,7 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              /// 🔷 ACADEMIC DETAILS
+              // ACADEMIC DETAILS
               _sectionTitle("ACADEMIC DETAILS"),
               _infoTile(Icons.book, "Course", course),
               _infoTile(Icons.calendar_today, "Year", year),
@@ -98,13 +98,13 @@ class StudentProfilePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              /// 🔷 SKILLS
+              // SKILLS
               _sectionTitle("SKILLS"),
               _infoTile(Icons.code, "Technical Skills", skills),
 
               const SizedBox(height: 30),
 
-              /// 🔷 UPDATE BUTTON
+              // UPDATE BUTTON
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -144,7 +144,7 @@ class StudentProfilePage extends StatelessWidget {
     );
   }
 
-  /// 🔹 SECTION TITLE
+  //SECTION TITLE
   Widget _sectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -161,7 +161,7 @@ class StudentProfilePage extends StatelessWidget {
     );
   }
 
-  /// 🔹 INFO TILE
+  // INFO TILE
   Widget _infoTile(IconData icon, String label, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),

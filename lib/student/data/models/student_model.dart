@@ -1,4 +1,3 @@
-// student_model.dart
 class StudentModel {
   final String fullName;
   final String email;

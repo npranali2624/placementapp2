@@ -70,7 +70,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
           child: Column(
             children: [
 
-              /// HEADER
+              //HEADER
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
               const SizedBox(height: 20),
 
-              /// PERSONAL INFORMATION
+              //PERSONAL INFORMATION
               _sectionTitle("PERSONAL INFORMATION"),
               _sectionCard(children: [
                 _field(label: "Full Name", value: "Rahul Sharma", enabled: false),
@@ -140,7 +140,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
               const SizedBox(height: 16),
 
-              /// ACADEMIC DETAILS
+              // ACADEMIC DETAILS
               _sectionTitle("ACADEMIC DETAILS"),
               _sectionCard(children: [
                 _field(label: "College Name", value: "MIT College of Engineering, Pune"),
@@ -154,7 +154,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
               const SizedBox(height: 16),
 
-              /// TECHNICAL SKILLS
+              //TECHNICAL SKILLS
               _sectionTitle("TECHNICAL SKILLS"),
               _sectionCard(children: [
                 _field(label: "Skills", value: "Flutter, Dart, Python, Firebase"),
@@ -162,7 +162,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
               const SizedBox(height: 16),
 
-              /// DOCUMENTS
+              //DOCUMENTS
               _sectionTitle("DOCUMENTS"),
               _sectionCard(children: [
                 _uploadButton("Upload Resume", Icons.upload_file),
@@ -171,7 +171,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
               const SizedBox(height: 24),
 
-              /// SAVE BUTTON
+              // SAVE BUTTON
               GestureDetector(
                 onTap: () {},
                 child: Container(
